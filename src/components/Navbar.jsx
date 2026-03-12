@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { ShoppingCart, User, Menu, X } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Get itemCount from cart context
+  const { itemCount } = useCart();
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -47,17 +51,35 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Mobile Hamburger Icon */}
-          <button 
-            onClick={toggleMobileMenu}
-            className="lg:hidden p-2 text-gray-700 hover:text-orange-600 transition focus:outline-none"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+          {/* Right Icons */}
+          <div className="flex items-center space-x-4">
+            {/* Cart Icon with Count - UPDATED */}
+            <Link to="/cart" className="relative p-2 hover:text-orange-500">
+              <ShoppingCart size={20} />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+
+            {/* User Icon */}
+            <Link to="/login" className="p-2 hover:text-orange-500">
+              <User size={20} />
+            </Link>
+
+            {/* Mobile Hamburger Icon */}
+            <button 
+              onClick={toggleMobileMenu}
+              className="lg:hidden p-2 text-gray-700 hover:text-orange-600 transition focus:outline-none"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Menu Dropdown - White background, separate from content */}
+        {/* Mobile Menu Dropdown */}
         {isMobileMenuOpen && (
           <div className="lg:hidden absolute left-0 right-0 bg-white shadow-lg border-t border-gray-100">
             <div className="container mx-auto px-4 py-4">

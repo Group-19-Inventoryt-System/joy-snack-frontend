@@ -4,7 +4,7 @@ import { ChevronRight, Star } from 'lucide-react';
 import basketImage from '../assets/images/categories/home1.png';
 import man1Image from '../assets/images/categories/man1.png';
 import plantainImage from '../assets/images/categories/plantain.png';
-import joysnackImage from '../assets/images/categories/joysnack.png';
+import joysnackImage from '../assets/images/categories/joysnack.jpeg';
 import springRoll from '../assets/images/categories/spring roll.png';
 import meatPie from '../assets/images/categories/meat pie.png';
 import sobolo from '../assets/images/categories/sobolo.png';

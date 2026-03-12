@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ChevronLeft, Minus, Plus, ShoppingCart } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 // Import all product images
 import chipsImg from '../assets/images/products/chips.png';
@@ -21,6 +22,9 @@ const ProductDetailPage = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
+  
+  // Get addToCart function from cart context
+  const { addToCart } = useCart();
 
   // All products data (same as in ProductsPage)
   const allProducts = [
@@ -167,10 +171,12 @@ const ProductDetailPage = () => {
   const increaseQuantity = () => setQuantity(prev => prev + 1);
   const decreaseQuantity = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
 
-  // Handle add to cart
-  const addToCart = () => {
-    // This will be implemented later when we set up cart functionality
-    alert(`Added to cart: ${quantity} x ${product?.name} (${selectedSize?.size})`);
+  // Handle add to cart - UPDATED with cart context
+  const handleAddToCart = () => {
+    if (product && selectedSize) {
+      addToCart(product, selectedSize, quantity);
+      alert(`Added to cart: ${quantity} x ${product.name} (${selectedSize.size})`);
+    }
   };
 
   if (loading) {
@@ -275,7 +281,7 @@ const ProductDetailPage = () => {
                 </div>
               </div>
 
-              {/* Price and Add to Cart */}
+              {/* Price and Add to Cart - UPDATED with handleAddToCart */}
               <div className="border-t pt-6">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-lg text-gray-600">Total Price:</span>
@@ -287,7 +293,7 @@ const ProductDetailPage = () => {
                 </div>
                 
                 <button
-                  onClick={addToCart}
+                  onClick={handleAddToCart}
                   className="w-full bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition flex items-center justify-center space-x-2"
                 >
                   <ShoppingCart size={20} />
