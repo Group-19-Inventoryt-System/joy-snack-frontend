@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, User, Menu, X } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, LogIn, UserPlus } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
   // Get itemCount from cart context
   const { itemCount } = useCart();
@@ -52,8 +53,8 @@ const Navbar = () => {
           </div>
 
           {/* Right Icons */}
-          <div className="flex items-center space-x-4">
-            {/* Cart Icon with Count - UPDATED */}
+          <div className="flex items-center space-x-2">
+            {/* Cart Icon */}
             <Link to="/cart" className="relative p-2 hover:text-orange-500">
               <ShoppingCart size={20} />
               {itemCount > 0 && (
@@ -63,10 +64,52 @@ const Navbar = () => {
               )}
             </Link>
 
-            {/* User Icon */}
-            <Link to="/login" className="p-2 hover:text-orange-500">
-              <User size={20} />
-            </Link>
+            {/* User Menu - Updated with signin/signup links */}
+            <div className="relative">
+              <button 
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="p-2 hover:text-orange-500 focus:outline-none"
+              >
+                <User size={20} />
+              </button>
+
+              {/* Dropdown Menu */}
+              {isUserMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-200">
+                  <Link
+                    to="/signin"
+                    onClick={() => setIsUserMenuOpen(false)}
+                    className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition"
+                  >
+                    <LogIn size={18} />
+                    <span>Sign In</span>
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setIsUserMenuOpen(false)}
+                    className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition"
+                  >
+                    <UserPlus size={18} />
+                    <span>Sign Up</span>
+                  </Link>
+                  <div className="border-t border-gray-200 my-2"></div>
+                  <Link
+                    to="/profile"
+                    onClick={() => setIsUserMenuOpen(false)}
+                    className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition"
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    to="/orders"
+                    onClick={() => setIsUserMenuOpen(false)}
+                    className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition"
+                  >
+                    My Orders
+                  </Link>
+                </div>
+              )}
+            </div>
 
             {/* Mobile Hamburger Icon */}
             <button 
@@ -98,6 +141,25 @@ const Navbar = () => {
                     {item.name}
                   </Link>
                 ))}
+                {/* Mobile Auth Links */}
+                <div className="border-t border-gray-200 pt-3 mt-3">
+                  <Link
+                    to="/signin"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition"
+                  >
+                    <LogIn size={18} />
+                    <span>Sign In</span>
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition"
+                  >
+                    <UserPlus size={18} />
+                    <span>Sign Up</span>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

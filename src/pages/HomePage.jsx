@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Star } from 'lucide-react';
 import basketImage from '../assets/images/categories/home1.png';
@@ -13,10 +13,19 @@ import deliveryGuy from '../assets/images/categories/delivery guy.png';
 import familyFood from '../assets/images/categories/family food.png';
 
 const HomePage = () => {
-  // State for the carousel in Screen 2
+  // State for the carousel
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Array of images for the carousel with your specific content and buttons
+  // Auto-slide effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev === carouselImages.length - 1 ? 0 : prev + 1));
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(timer); // Cleanup on unmount
+  }, []);
+
+  // Array of images for the carousel
   const carouselImages = [
     {
       id: 1,
@@ -103,14 +112,14 @@ const HomePage = () => {
     }
   ];
 
-  // Functions to navigate between slides
+  // Functions to navigate between slides (manual control)
   const goToSlide = (index) => {
     setCurrentSlide(index);
   };
 
   return (
     <div>
-      {/* SCREEN 1: Colored Rectangle Section */}
+      {/* SCREEN 1: Colored Rectangle Section with Pulsing Get Started Button */}
       <div className="w-full" style={{ backgroundColor: '#E7D4A2' }}>
         <div className="container mx-auto px-4 py-16 lg:py-20">
           <div className="flex flex-col lg:flex-row items-center gap-12">
@@ -123,14 +132,21 @@ const HomePage = () => {
                 delightful snacks. Our mission is to provide a curated selection of 
                 high-quality, delicious snacks that cater to all tastes and preferences.
               </p>
-              <Link 
-                to="/products" 
-                className="inline-flex items-center text-orange-500 font-semibold text-lg hover:text-orange-600 transition group"
-              >
-                Shop Now
-                <ChevronRight className="ml-1 group-hover:translate-x-1 transition" size={20} />
-              </Link>
+              
+              {/* Pulsing Get Started Button */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-4">
+                <Link 
+                  to="/signup" 
+                  className="inline-flex items-center justify-center bg-orange-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-600 transition transform hover:scale-105 shadow-lg animate-pulse"
+                >
+                  Get Started
+                  <ChevronRight className="ml-2" size={20} />
+                </Link>
+              </div>
+
+              
             </div>
+            
             <div className="flex-1">
               <div className="relative">
                 <img 
@@ -147,7 +163,7 @@ const HomePage = () => {
       {/* White space between screens */}
       <div className="w-full h-16 bg-white"></div>
 
-      {/* SCREEN 2: Carousel Section */}
+      {/* SCREEN 2: Auto-sliding Carousel Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-12 mb-12">
@@ -156,8 +172,13 @@ const HomePage = () => {
                 <img 
                   src={carouselImages[currentSlide].src} 
                   alt={carouselImages[currentSlide].alt}
-                  className="w-full h-[400px] object-cover"
+                  className="w-full h-[400px] object-cover transition-opacity duration-500"
                 />
+                
+                {/* Optional: Add slide number indicator */}
+                <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                  {currentSlide + 1} / {carouselImages.length}
+                </div>
               </div>
             </div>
             <div className="flex-1 text-center lg:text-left">
@@ -179,7 +200,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          {/* Navigation buttons */}
+          {/* Navigation buttons (manual control) */}
           <div className="flex justify-center items-center space-x-4 mt-12">
             {carouselImages.map((_, index) => (
               <button
@@ -196,7 +217,7 @@ const HomePage = () => {
             ))}
           </div>
 
-          {/* Circle indicators */}
+          {/* Circle indicators with auto-slide visual feedback */}
           <div className="flex justify-center mt-6 space-x-3">
             {carouselImages.map((_, index) => (
               <button
@@ -204,11 +225,15 @@ const HomePage = () => {
                 onClick={() => goToSlide(index)}
                 className={`transition-all duration-300 ${
                   currentSlide === index 
-                    ? 'w-3 h-3 bg-black rounded-full' 
+                    ? 'w-4 h-4 bg-black rounded-full relative' 
                     : 'w-2 h-2 bg-gray-400 rounded-full hover:bg-gray-600'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
-              />
+              >
+                {currentSlide === index && (
+                  <span className="absolute inset-0 rounded-full bg-black animate-ping opacity-75"></span>
+                )}
+              </button>
             ))}
           </div>
         </div>
