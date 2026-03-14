@@ -16,15 +16,6 @@ const HomePage = () => {
   // State for the carousel
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Auto-slide effect
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev === carouselImages.length - 1 ? 0 : prev + 1));
-    }, 5000); // Change slide every 5 seconds
-
-    return () => clearInterval(timer); // Cleanup on unmount
-  }, []);
-
   // Array of images for the carousel
   const carouselImages = [
     {
@@ -112,14 +103,23 @@ const HomePage = () => {
     }
   ];
 
-  // Functions to navigate between slides (manual control)
+  // Auto-slide effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev === carouselImages.length - 1 ? 0 : prev + 1));
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Manual navigation function
   const goToSlide = (index) => {
     setCurrentSlide(index);
   };
 
   return (
     <div>
-      {/* SCREEN 1: Colored Rectangle Section with Pulsing Get Started Button */}
+      {/* SCREEN 1: Colored Rectangle Section */}
       <div className="w-full" style={{ backgroundColor: '#E7D4A2' }}>
         <div className="container mx-auto px-4 py-16 lg:py-20">
           <div className="flex flex-col lg:flex-row items-center gap-12">
@@ -144,7 +144,13 @@ const HomePage = () => {
                 </Link>
               </div>
 
-              
+              {/* Quick Benefits */}
+              <div className="flex flex-wrap gap-4 justify-center lg:justify-start text-sm text-gray-600">
+                <span className="flex items-center">✓ Track Orders</span>
+                <span className="flex items-center">✓ Save Favorites</span>
+                <span className="flex items-center">✓ Faster Checkout</span>
+                <span className="flex items-center">✓ Exclusive Offers</span>
+              </div>
             </div>
             
             <div className="flex-1">
@@ -163,72 +169,92 @@ const HomePage = () => {
       {/* White space between screens */}
       <div className="w-full h-16 bg-white"></div>
 
-      {/* SCREEN 2: Auto-sliding Carousel Section */}
+      {/* SCREEN 2: Auto-sliding Carousel with Fade Transition */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-12 mb-12">
-            <div className="flex-1 relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-xl">
-                <img 
-                  src={carouselImages[currentSlide].src} 
-                  alt={carouselImages[currentSlide].alt}
-                  className="w-full h-[400px] object-cover transition-opacity duration-500"
-                />
-                
-                {/* Optional: Add slide number indicator */}
-                <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+            {/* Image Container with Fade Animation */}
+            <div className="flex-1 relative overflow-hidden">
+              <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-xl">
+                {carouselImages.map((image, index) => (
+                  <div
+                    key={image.id}
+                    className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                      currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                    }`}
+                  >
+                    <img 
+                      src={image.src} 
+                      alt={image.alt}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+
+                {/* Slide indicator */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 text-white text-sm px-3 py-1 rounded-full z-20">
                   {currentSlide + 1} / {carouselImages.length}
                 </div>
               </div>
             </div>
+
+            {/* Text content with fade animation */}
             <div className="flex-1 text-center lg:text-left">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">
-                {carouselImages[currentSlide].title}
-              </h2>
-              <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-                {carouselImages[currentSlide].description}
-              </p>
-              
-              {/* Dynamic button based on current slide */}
-              <Link
-                to={carouselImages[currentSlide].buttonLink}
-                className="inline-flex items-center bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition transform hover:scale-105"
-              >
-                {carouselImages[currentSlide].buttonText}
-                <ChevronRight className="ml-2" size={20} />
-              </Link>
+              {carouselImages.map((image, index) => (
+                <div
+                  key={image.id}
+                  className={`transition-opacity duration-1000 ease-in-out ${
+                    currentSlide === index ? 'block' : 'hidden'
+                  }`}
+                >
+                  <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">
+                    {image.title}
+                  </h2>
+                  <p className="text-gray-600 text-lg mb-8 leading-relaxed">
+                    {image.description}
+                  </p>
+                  
+                  {/* Dynamic button based on current slide */}
+                  <Link
+                    to={image.buttonLink}
+                    className="inline-flex items-center bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition transform hover:scale-105"
+                  >
+                    {image.buttonText}
+                    <ChevronRight className="ml-2" size={20} />
+                  </Link>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Navigation buttons (manual control) */}
+          {/* Navigation buttons */}
           <div className="flex justify-center items-center space-x-4 mt-12">
             {carouselImages.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`px-4 sm:px-8 py-3 font-semibold text-sm sm:text-lg transition ${
+                className={`px-4 sm:px-8 py-3 font-semibold text-sm sm:text-lg transition-all duration-300 ${
                   currentSlide === index 
                     ? 'bg-black text-white' 
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
+                } cursor-pointer`}
               >
                 {index === 0 ? 'Discover' : index === 1 ? 'Quality' : 'Shopping'}
               </button>
             ))}
           </div>
 
-          {/* Circle indicators with auto-slide visual feedback */}
+          {/* Circle indicators */}
           <div className="flex justify-center mt-6 space-x-3">
             {carouselImages.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`transition-all duration-300 ${
+                className={`transition-all duration-300 focus:outline-none ${
                   currentSlide === index 
                     ? 'w-4 h-4 bg-black rounded-full relative' 
                     : 'w-2 h-2 bg-gray-400 rounded-full hover:bg-gray-600'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
+                } cursor-pointer`}
               >
                 {currentSlide === index && (
                   <span className="absolute inset-0 rounded-full bg-black animate-ping opacity-75"></span>
