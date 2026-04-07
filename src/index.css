@@ -1,3 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@100..900&family=Sulphur+Point:wght@300;400;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-joysnacky-dark: 91 14 14;
+  --color-joysnacky-primary: 128 21 21;
+  --color-joysnacky-accent: 217 119 6;
+  --color-joysnacky-light: 254 249 243;
+  --color-joysnacky-brown: 74 43 18;
+  --color-joysnacky-orange: 217 119 6;
+  --color-joysnacky-orange-light: 251 191 36;
+  --color-joysnacky-orange-dark: 180 83 9;
+  --color-joysnacky-light-muted: 255 251 247;
+  --color-joysnacky-light-soft: 252 241 228;
+  --color-joysnacky-accent-soft: 254 243 199;
+  --color-joysnacky-accent-glow: 252 211 77;
+  --color-joysnacky-accent-strong: 245 158 11;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-joysnacky-light text-joysnacky-brown font-body;
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+}
+
+@layer utilities {
+  .animate-in {
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .fade-in {
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    animation-name: fade-in;
+  }
+
+  .animate-pulse-subtle {
+    @keyframes pulse-subtle {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.6;
+        transform: scale(1.05);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    animation-name: pulse-subtle;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+  }
+}
