@@ -1,204 +1,168 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Star } from 'lucide-react';
+import { useAppData } from '../context/AppDataContext';
+import { formatCurrency } from '../data/catalog';
 import basketImage from '../assets/images/categories/home1.png';
 import man1Image from '../assets/images/categories/man1.png';
 import plantainImage from '../assets/images/categories/plantain.png';
 import joysnackImage from '../assets/images/categories/joysnack.jpeg';
-import springRoll from '../assets/images/categories/spring roll.png';
-import meatPie from '../assets/images/categories/meat pie.png';
-import sobolo from '../assets/images/categories/sobolo.png';
 import perfectNigerian from '../assets/images/categories/perfect-nigerian-meat-pie-filling 1.png';
 import deliveryGuy from '../assets/images/categories/delivery guy.png';
 import familyFood from '../assets/images/categories/family food.png';
 
 const HomePage = () => {
-  // State for the carousel
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { hydratedProducts, productsLoading } = useAppData();
 
-  // Array of images for the carousel
   const carouselImages = [
     {
       id: 1,
       src: man1Image,
-      alt: "Man in yellow background",
-      title: "Discover Unique Flavors",
-      description: "Explore an array of snacks from around the globe, featuring unique flavors that tantalize your taste buds. Each snack is carefully selected to ensure quality and satisfaction.",
-      buttonText: "Learn More",
-      buttonLink: "/products"
+      alt: 'Man in yellow background',
+      title: 'Discover Unique Flavors',
+      description:
+        'Explore an array of snacks from around the globe, featuring unique flavors that tantalize your taste buds. Each snack is carefully selected to ensure quality and satisfaction.',
+      buttonText: 'Learn More',
+      buttonLink: '/products',
     },
     {
       id: 2,
       src: plantainImage,
-      alt: "Plantain snacks",
-      title: "Fresh and Quality Assured",
-      description: "We prioritize freshness and quality in all our products. Our snacks are sourced from trusted producers who adhere to strict quality standards.",
-      buttonText: "View Selection",
-      buttonLink: "/products"
+      alt: 'Plantain snacks',
+      title: 'Fresh and Quality Assured',
+      description:
+        'We prioritize freshness and quality in all our products. Our snacks are sourced from trusted producers who adhere to strict quality standards.',
+      buttonText: 'View Selection',
+      buttonLink: '/products',
     },
     {
       id: 3,
       src: joysnackImage,
-      alt: "Joy Snack packaged chips",
-      title: "Convenient Online Shopping",
-      description: "Enjoy a seamless online shopping experience with easy navigation, secure checkout, and prompt delivery right to your doorstep.",
-      buttonText: "Start Shopping",
-      buttonLink: "/products"
-    }
+      alt: 'Joy Snack packaged chips',
+      title: 'Convenient Online Shopping',
+      description:
+        'Enjoy a seamless online shopping experience with easy navigation, secure checkout, and prompt delivery right to your doorstep.',
+      buttonText: 'Start Shopping',
+      buttonLink: '/products',
+    },
   ];
 
-  // Products for Screen 3
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "Spring Roll",
-      price: "GH₵10.00",
-      image: springRoll,
-      alt: "Delicious spring roll"
-    },
-    {
-      id: 2,
-      name: "Meat Pie",
-      price: "GH₵5.00",
-      image: meatPie,
-      alt: "Savory meat pie"
-    },
-    {
-      id: 3,
-      name: "Sobolo Drink",
-      price: "GH₵5.00",
-      image: sobolo,
-      alt: "Refreshing sobolo drink"
-    }
-  ];
+  const featuredProducts = productsLoading 
+    ? [] 
+    : hydratedProducts
+        .filter((product) => product.featured)
+        .slice(0, 3)
+        .map((product) => ({
+          id: product.id,
+          name: product.name,
+          price: formatCurrency(product.sizes[0]?.price ?? 0),
+          image: product.image,
+          alt: product.name,
+        }));
 
-  // Testimonials for Screen 4
   const testimonials = [
     {
       id: 1,
-      name: "Perfect Nigerian",
+      name: 'Perfect Nigerian',
       image: perfectNigerian,
-      alt: "Happy customer with perfect Nigerian meat pie",
-      quote: "Absolutely Delicious!",
+      alt: 'Happy customer with perfect Nigerian meat pie',
+      quote: 'Absolutely Delicious!',
       text: "The snacks from Joy Snack are a game changer! They're fresh and full of flavor. Highly recommend!",
-      rating: 5
+      rating: 5,
     },
     {
       id: 2,
-      name: "Delivery Guy",
+      name: 'Delivery Guy',
       image: deliveryGuy,
-      alt: "Fast delivery service",
-      quote: "Fast Delivery!",
+      alt: 'Fast delivery service',
+      quote: 'Fast Delivery!',
       text: "The snacks from Joy Snack are a game changer! They're fresh and full of flavors. Highly recommend!",
-      rating: 5
+      rating: 5,
     },
     {
       id: 3,
-      name: "Happy Family",
+      name: 'Happy Family',
       image: familyFood,
-      alt: "Family enjoying snacks",
-      quote: "Great Variety",
+      alt: 'Family enjoying snacks',
+      quote: 'Great Variety',
       text: "Joy Snack offers a fantastic variety of snacks! There's something for everyone in my family.",
-      rating: 5
-    }
+      rating: 5,
+    },
   ];
 
-  // Auto-slide effect
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev === carouselImages.length - 1 ? 0 : prev + 1));
     }, 5000);
 
     return () => clearInterval(timer);
-  }, []);
-
-  // Manual navigation function
-  const goToSlide = (index) => {
-    setCurrentSlide(index);
-  };
+  }, [carouselImages.length]);
 
   return (
     <div>
-      {/* SCREEN 1: Colored Rectangle Section */}
       <div className="w-full" style={{ backgroundColor: '#E7D4A2' }}>
         <div className="container mx-auto px-4 py-16 lg:py-20">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
+          <div className="flex flex-col items-center gap-12 lg:flex-row">
             <div className="flex-1 text-center lg:text-left">
-              <h1 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-6">
+              <h1 className="mb-6 text-4xl font-bold text-gray-800 lg:text-5xl">
                 Joy Snack <span className="text-orange-500">E-Commerce</span>
               </h1>
-              <p className="text-gray-700 text-lg mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                At Joy Snack E-commerce, we believe in the joy that comes from sharing 
-                delightful snacks. Our mission is to provide a curated selection of 
-                high-quality, delicious snacks that cater to all tastes and preferences.
+              <p className="mx-auto mb-8 max-w-xl text-lg leading-relaxed text-gray-700 lg:mx-0">
+                At Joy Snack E-commerce, we believe in the joy that comes from sharing delightful snacks. Our mission is to provide a curated selection of high-quality, delicious snacks that cater to all tastes and preferences.
               </p>
-              
-              {/* Pulsing Get Started Button */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-4">
-                <Link 
-                  to="/signup" 
-                  className="inline-flex items-center justify-center bg-orange-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-600 transition transform hover:scale-105 shadow-lg animate-pulse"
+
+              <div className="mb-4 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center justify-center rounded-lg bg-primary px-8 py-4 text-lg font-bold text-white shadow-lg transition hover:scale-105 hover:bg-orange-600"
                 >
                   Get Started
                   <ChevronRight className="ml-2" size={20} />
                 </Link>
               </div>
 
-              {/* Quick Benefits */}
-              <div className="flex flex-wrap gap-4 justify-center lg:justify-start text-sm text-gray-600">
+              <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 lg:justify-start">
                 <span className="flex items-center">✓ Track Orders</span>
                 <span className="flex items-center">✓ Save Favorites</span>
                 <span className="flex items-center">✓ Faster Checkout</span>
                 <span className="flex items-center">✓ Exclusive Offers</span>
               </div>
             </div>
-            
+
             <div className="flex-1">
               <div className="relative">
-                <img 
-                  src={basketImage} 
-                  alt="Joy Snack Basket" 
-                  className="w-full h-auto max-h-[500px] object-contain"
-                />
+                <img src={basketImage} alt="Joy Snack Basket" className="h-auto max-h-[500px] w-full object-contain" />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* White space between screens */}
-      <div className="w-full h-16 bg-white"></div>
+      <div className="h-16 w-full bg-white"></div>
 
-      {/* SCREEN 2: Auto-sliding Carousel with Fade Transition */}
-      <section className="py-16 bg-white">
+      <section className="bg-white py-16">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-12 mb-12">
-            {/* Image Container with Fade Animation */}
-            <div className="flex-1 relative overflow-hidden">
-              <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-xl">
+          <div className="mb-12 flex flex-col items-center gap-12 lg:flex-row">
+            <div className="relative flex-1 overflow-hidden">
+              <div className="relative h-[400px] overflow-hidden rounded-2xl shadow-xl">
                 {carouselImages.map((image, index) => (
                   <div
                     key={image.id}
                     className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                      currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                      currentSlide === index ? 'z-10 opacity-100' : 'z-0 opacity-0'
                     }`}
                   >
-                    <img 
-                      src={image.src} 
-                      alt={image.alt}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={image.src} alt={image.alt} className="h-full w-full object-cover" />
                   </div>
                 ))}
 
-                {/* Slide indicator */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 text-white text-sm px-3 py-1 rounded-full z-20">
+                <div className="absolute bottom-4 left-1/2 z-20 -translate-x-1/2 rounded-full bg-black/50 px-3 py-1 text-sm text-white">
                   {currentSlide + 1} / {carouselImages.length}
                 </div>
               </div>
             </div>
 
-            {/* Text content with fade animation */}
             <div className="flex-1 text-center lg:text-left">
               {carouselImages.map((image, index) => (
                 <div
@@ -207,17 +171,12 @@ const HomePage = () => {
                     currentSlide === index ? 'block' : 'hidden'
                   }`}
                 >
-                  <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">
-                    {image.title}
-                  </h2>
-                  <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-                    {image.description}
-                  </p>
-                  
-                  {/* Dynamic button based on current slide */}
+                  <h2 className="mb-4 text-3xl font-bold text-gray-800 lg:text-4xl">{image.title}</h2>
+                  <p className="mb-8 text-lg leading-relaxed text-gray-600">{image.description}</p>
+
                   <Link
                     to={image.buttonLink}
-                    className="inline-flex items-center bg-black text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition transform hover:scale-105"
+                    className="inline-flex items-center rounded-lg bg-black px-8 py-3 font-semibold text-white transition hover:scale-105 hover:bg-gray-800"
                   >
                     {image.buttonText}
                     <ChevronRight className="ml-2" size={20} />
@@ -227,37 +186,33 @@ const HomePage = () => {
             </div>
           </div>
 
-          {/* Navigation buttons */}
-          <div className="flex justify-center items-center space-x-4 mt-12">
+          <div className="mt-12 flex items-center justify-center space-x-4">
             {carouselImages.map((_, index) => (
               <button
                 key={index}
-                onClick={() => goToSlide(index)}
-                className={`px-4 sm:px-8 py-3 font-semibold text-sm sm:text-lg transition-all duration-300 ${
-                  currentSlide === index 
-                    ? 'bg-black text-white' 
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                } cursor-pointer`}
+                onClick={() => setCurrentSlide(index)}
+                className={`cursor-pointer px-4 py-3 text-sm font-semibold transition-all duration-300 sm:px-8 sm:text-lg ${
+                  currentSlide === index ? 'bg-black text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
               >
                 {index === 0 ? 'Discover' : index === 1 ? 'Quality' : 'Shopping'}
               </button>
             ))}
           </div>
 
-          {/* Circle indicators */}
-          <div className="flex justify-center mt-6 space-x-3">
+          <div className="mt-6 flex justify-center space-x-3">
             {carouselImages.map((_, index) => (
               <button
                 key={index}
-                onClick={() => goToSlide(index)}
-                className={`transition-all duration-300 focus:outline-none ${
-                  currentSlide === index 
-                    ? 'w-4 h-4 bg-black rounded-full relative' 
-                    : 'w-2 h-2 bg-gray-400 rounded-full hover:bg-gray-600'
-                } cursor-pointer`}
+                onClick={() => setCurrentSlide(index)}
+                className={`cursor-pointer transition-all duration-300 focus:outline-none ${
+                  currentSlide === index
+                    ? 'relative h-4 w-4 rounded-full bg-black'
+                    : 'h-2 w-2 rounded-full bg-gray-400 hover:bg-gray-600'
+                }`}
               >
                 {currentSlide === index && (
-                  <span className="absolute inset-0 rounded-full bg-black animate-ping opacity-75"></span>
+                  <span className="absolute inset-0 rounded-full bg-black opacity-75 animate-ping"></span>
                 )}
               </button>
             ))}
@@ -265,106 +220,98 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* White space between screens */}
-      <div className="w-full h-16 bg-white"></div>
+      <div className="h-16 w-full bg-white"></div>
 
-      {/* SCREEN 3: Featured Products Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">
-              Our Popular Snacks
-            </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Try our customer favorites, made with love and the finest ingredients
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-gray-800 lg:text-4xl">Our Popular Snacks</h2>
+            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+              Try our customer favorites, made with love and the finest ingredients.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => (
-              <div 
-                key={product.id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300 transform hover:-translate-y-2"
-              >
-                <div className="h-64 overflow-hidden">
-                  <img 
-                    src={product.image} 
-                    alt={product.alt}
-                    className="w-full h-full object-cover hover:scale-110 transition duration-500"
-                  />
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {productsLoading ? (
+              // Loading skeleton
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="h-64 bg-gray-300 rounded-xl mb-4"></div>
+                  <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-300 rounded w-3/4"></div>
                 </div>
-                <div className="p-6 text-center">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">
-                    {product.name}
-                  </h3>
-                  <p className="text-2xl font-bold text-orange-500 mb-4">
-                    {product.price}
-                  </p>
-                  <Link
-                    to="/products"
-                    className="inline-block bg-black text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-800 transition"
-                  >
-                    Order Now
-                  </Link>
+              ))
+            ) : (
+              featuredProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="overflow-hidden rounded-xl bg-white shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                >
+                  <div className="h-64 overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.alt}
+                      className="h-full w-full object-cover transition duration-500 hover:scale-110"
+                    />
+                  </div>
+                  <div className="p-6 text-center">
+                    <h3 className="mb-2 text-xl font-bold text-gray-800">{product.name}</h3>
+                    <p className="mb-4 text-2xl font-bold text-orange-500">{product.price}</p>
+                    <Link
+                      to={`/product/${product.id}`}
+                      className="inline-block rounded-lg bg-black px-6 py-2 font-semibold text-white transition hover:bg-gray-800"
+                    >
+                      Order Now
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="mt-12 text-center">
             <Link
               to="/products"
-              className="inline-flex items-center text-orange-500 font-semibold text-lg hover:text-orange-600 transition group"
+              className="inline-flex items-center text-lg font-semibold text-orange-500 transition hover:text-orange-600"
             >
               View All Products
-              <ChevronRight className="ml-1 group-hover:translate-x-1 transition" size={20} />
+              <ChevronRight className="ml-1" size={20} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* White space between screens */}
-      <div className="w-full h-16 bg-white"></div>
+      <div className="h-16 w-full bg-white"></div>
 
-      {/* SCREEN 4: Testimonials Section */}
-      <section className="py-16 bg-white">
+      <section className="bg-white py-16">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">
-              What Our Customers Say
-            </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-gray-800 lg:text-4xl">What Our Customers Say</h2>
+            <p className="mx-auto max-w-2xl text-lg text-gray-600">
               Join our community of snack lovers and see why they choose Joy Snack for their cravings.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((testimonial) => (
-              <div 
-                key={testimonial.id}
-                className="bg-gray-50 rounded-xl p-6 shadow-lg hover:shadow-xl transition duration-300"
-              >
-                <div className="flex items-center mb-4">
-                  <div className="w-16 h-16 rounded-full overflow-hidden mr-4">
-                    <img 
-                      src={testimonial.image} 
-                      alt={testimonial.alt}
-                      className="w-full h-full object-cover"
-                    />
+              <div key={testimonial.id} className="rounded-xl bg-gray-50 p-6 shadow-lg transition duration-300 hover:shadow-xl">
+                <div className="mb-4 flex items-center">
+                  <div className="mr-4 h-16 w-16 overflow-hidden rounded-full">
+                    <img src={testimonial.image} alt={testimonial.alt} className="h-full w-full object-cover" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">{testimonial.name}</h3>
-                    <div className="flex text-yellow-400 mt-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={16} fill="currentColor" />
+                    <div className="mt-1 flex text-yellow-400">
+                      {[...Array(testimonial.rating)].map((_, index) => (
+                        <Star key={index} size={16} fill="currentColor" />
                       ))}
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mb-3">
-                  <p className="text-xl font-bold text-gray-800 mb-2">"{testimonial.quote}"</p>
-                  <p className="text-gray-600 italic">{testimonial.text}</p>
+                  <p className="mb-2 text-xl font-bold text-gray-800">"{testimonial.quote}"</p>
+                  <p className="italic text-gray-600">{testimonial.text}</p>
                 </div>
               </div>
             ))}
@@ -372,8 +319,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* White space at the bottom */}
-      <div className="w-full h-16 bg-white"></div>
+      <div className="h-16 w-full bg-white"></div>
     </div>
   );
 };
