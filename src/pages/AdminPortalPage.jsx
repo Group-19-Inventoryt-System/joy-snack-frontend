@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Shield } from "lucide-react";
+import { Shield, Sparkles } from "lucide-react";
 import { useAppData } from "../context/AppDataContext";
 import { useAuth } from "../hooks";
 import { formatCurrency } from "../data/catalog";
@@ -92,33 +92,41 @@ const AdminPortalPage = () => {
     {
       label: "Total Customers",
       value: `${users.length}+`,
-      detail: "Active shoppers in the workspace",
+      detail: "Active shoppers directory",
       icon: sidebarItems[1].icon,
-      tone: "bg-gradient-to-br from-violet-500 to-violet-600",
+      tone: "bg-gradient-to-br from-orange-500 to-amber-600",
     },
     {
-      label: "Total Products",
+      label: "Inventory Items",
       value: `${hydratedProducts.length}+`,
-      detail: `${totalStockKeepingUnits} product variants`,
+      detail: `${totalStockKeepingUnits} product SKUs live`,
       icon: sidebarItems[2].icon,
-      tone: "bg-gradient-to-br from-amber-500 to-orange-500",
+      tone: "bg-gradient-to-br from-orange-600 to-orange-700",
     },
     {
-      label: "Catalog Value",
+      label: "Store Valuation",
       value: formatCurrency(productBaseValue),
-      detail: "Based on entry pricing per item",
+      detail: "Entry pricing net worth",
       icon: sidebarItems[3].icon,
-      tone: "bg-gradient-to-br from-rose-500 to-red-500",
+      tone: "bg-gradient-to-br from-amber-400 to-orange-500",
     },
   ];
 
   return (
-    <div className="flex-1 p-4 sm:p-6 lg:p-8">
-      <div className="mb-6">
-        <p className="text-sm font-medium text-violet-500">Dashboard</p>
-        <h2 className="mt-1 text-3xl font-bold text-slate-900">
-          Hello, {user?.fullName ?? "Admin"}
-        </h2>
+    <div className="flex-1 lg:px-6">
+      <div className="mb-10 flex flex-col sm:flex-row sm:items-center sm:justify-between px-2">
+        <div>
+          <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 mb-2">
+            <Sparkles size={14} className="animate-pulse" />
+            Control Center
+          </span>
+          <h2 className="text-4xl font-black text-slate-800 font-sulphur tracking-tight">
+            Hello, {"Admin"}
+          </h2>
+          <p className="text-slate-400 text-sm mt-1 font-bold">
+            Here's what's happening in your snack empire today.
+          </p>
+        </div>
       </div>
 
       <AdminDashboardView
@@ -135,3 +143,4 @@ const AdminPortalPage = () => {
 };
 
 export default AdminPortalPage;
+
